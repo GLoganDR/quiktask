@@ -1,0 +1,47 @@
+.row
+  .col-xs-12
+    h3 {{title}}
+.row
+  .col-xs-3
+    form(novalidate, name='taskForm', role='form')
+      .form-group
+        label(for='name') Name
+        input.form-control#name(name='name', type='text', ng-model='task.name', required, ng-minlength='3', autofocus)
+      .form-group
+        label(for='due') Due
+        input.form-control#due(name='due', type='date', ng-model='task.due', required)
+      .form-group
+        label(for='priority') Priorities:
+          select(name='priorities', ng-model='task.priority')
+            option(ng-repeat='p in priorities', value='{{p}}') {{p.name}}
+      .form-group
+        button.btn.btn-success(ng-show='taskForm.$valid', ng-click='add()') Add Task
+  .col-xs-9
+.row
+  .col-xs-3
+  .col-xs-6
+    .panel.panel-default
+      .panel-body
+        .radio
+          label
+            input(name='sort', type='radio', ng-model='sort', value='due')
+            span Ascending
+        .radio
+          label
+            input(name='sort', type='radio', ng-model='sort', value='-due')
+            span Descending
+        table.table.table-hover.table-bordered
+          thead
+            tr
+              th Name
+              th Due Date
+              th Priority
+              th Complete
+          tbody
+            //- sort by ascending alphabetical orderBy:"name" sort descending alphabetical orderBy:"-name"
+            tr(ng-repeat='t in tasks | orderBy:sort')
+              td {{t.name}}
+              td {{t.due | date:'fullDate'}}
+              td(ng-style='{"background-color":t.priority.color}'){{t.priority.name}}
+              td {{t.isComplete ? 'Yes' : 'No'}}
+  .col-xs-3
